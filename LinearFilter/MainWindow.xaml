@@ -1,0 +1,28 @@
+﻿<Window x:Name="LinearFilter" x:Class="LinearFilter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LinearFilter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="170" Width="550" Background="#FF78A3FF">
+    <!--ShowGridLines="True"MaxWidth="550" MaxHeight="450" MinWidth="550" MinHeight="450"-->
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="420"></ColumnDefinition>
+            <ColumnDefinition Width="110"></ColumnDefinition>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="ImageName" Background="#FFC7E1FF" Height="24"  VerticalAlignment="Center" Width="400" HorizontalContentAlignment="Left" FontSize="15" VerticalContentAlignment="Center"/>
+        <Slider x:Name="SliderFilter" Value="0" Minimum="0" Maximum="100" SelectionStart="0" Height="30" 
+            IsSelectionRangeEnabled="True" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,9,5,7" ValueChanged="Slider_ValueChanged"/>
+        <Button x:Name="OpenImage" Content="Відкрити" Grid.Column="1" Width="100" Height="24" FontSize="15" Background="#FF6596FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Margin="10,38,5,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="28" FontSize="20" Grid.RowSpan="2"><Run Text="0"/><Run Text="                                                        "/><Run Text="       "/><Run Text="                      "/><Run Text=" "/><Run Text="100"/></TextBlock>
+        <!--Click="SearchClick"-->
+    </Grid>
+</Window>
