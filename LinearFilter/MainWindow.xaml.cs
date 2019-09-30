@@ -17,6 +17,8 @@ using Emgu.CV;
 using Emgu.Util;
 using Emgu.CV.CvEnum;
 using System.Threading;
+using System.IO;
+using System.Windows.Forms;
 
 namespace LinearFilter
 {
@@ -25,45 +27,64 @@ namespace LinearFilter
     /// </summary>
     public partial class MainWindow : Window
     {
+        string patchImage;
+        Mat imageInput;
+
         public MainWindow()
         {
             InitializeComponent();
-            //PerformFiltering(@"C:\Users\DanKor1498\Desktop\apple.jpg", 3);
         }
 
-        public void PerformFiltering(string fileName, int kernelSize)
+        public void PerformFiltering(Mat image, Mat kernel)
         {
-            Mat imageInput, imageOutput;
-            imageInput = CvInvoke.Imread(fileName, ImreadModes.Color);
-            imageOutput = imageInput;
-
-            Mat kernel;
-            System.Drawing.Point anchor = new System.Drawing.Point(-1, -1); 
-            double delta = 0.0;
-
-            if (imageInput.IsEmpty)
-            {
-                MessageBox.Show("Помилка відкриття файлу зображення.");
-                return;
-            }
-
-            kernel = Mat.Ones(kernelSize, kernelSize, DepthType.Cv32F, 1) / (float)(kernelSize * kernelSize);
-            CvInvoke.Filter2D(imageInput, imageOutput, kernel, anchor, delta, BorderType.Default);
-            CvInvoke.Imshow(this.LinearFilter.Name, imageOutput);
-
-            //for(int i = 3; i<10; i++)
-            //{
-            //    kernel = Mat.Ones(i, i, DepthType.Cv32F, 1) / (float)(i * i);
-            //    CvInvoke.Filter2D(imageInput, imageOutput, kernel, anchor, delta, BorderType.Default);
-            //    CvInvoke.Imshow(this.LinearFilter.Name, imageOutput);
-            //    CvInvoke.WaitKey(500);
-            //}
+            CvInvoke.Filter2D(imageInput, image, kernel, new System.Drawing.Point(-1, -1), 0.0, BorderType.Default);
+            CvInvoke.Imshow(this.LinearFilter.Name, image);
         }
-
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            PerformFiltering(@"C:\Users\DanKor1498\Desktop\apple.jpg", (int)((Slider)sender).Value);
+            if (imageInput == null || this.ImageName.Text == "")
+            {
+                System.Windows.MessageBox.Show("Помилка відкриття файлу зображення.");
+                return;
+            }
+            Mat image = imageInput.Clone();
+            int kernelInt = (int)((Slider)sender).Value;
+            if(kernelInt == 0)
+            {
+                CvInvoke.Imshow(this.LinearFilter.Name, imageInput);
+                return;
+            }
+            Mat kernel = Mat.Ones(kernelInt, kernelInt, DepthType.Cv32F, 1) / (float)(kernelInt * kernelInt);
+            PerformFiltering(image, kernel);
+        }
+
+        private void ReviewClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog OPF = new OpenFileDialog();
+                if (OPF.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    this.ImageName.Text = OPF.FileName;
+                    patchImage = @OPF.FileName;
+                }
+
+                imageInput = CvInvoke.Imread(patchImage, ImreadModes.Color);
+
+                if (imageInput.IsEmpty)
+                {
+                    System.Windows.MessageBox.Show("Помилка відкриття файлу зображення.");
+                    return;
+                }
+
+                CvInvoke.Imshow(this.LinearFilter.Name, imageInput);
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Помилка відкриття файлу зображення.");
+            }
         }
     }
 }
+
